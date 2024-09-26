@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אתר הכרויות</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .input-group {
+            margin: 20px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        .chat-box {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+            background-color: #f9f9f9;
+        }
+
+        .message {
+            padding: 10px;
+            background-color: #e1ffc7;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        .message.other {
+            background-color: #d9d9d9;
+        }
+
+        .chat-input {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-right: 10px;
+        }
+
+        .chat-input button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .chat-input button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>אתר הכרויות</h1>
+
+        <!-- אזור ההתחברות / רישום -->
+        <div class="input-group">
+            <label for="username">שם משתמש:</label>
+            <input type="text" id="username" placeholder="הכנס שם משתמש">
+        </div>
+        <div class="input-group">
+            <label for="password">סיסמה:</label>
+            <input type="password" id="password" placeholder="הכנס סיסמה">
+        </div>
+        <button class="btn" onclick="login()">התחבר</button>
+
+        <!-- אזור הצ'אט -->
+        <div class="chat-box" id="chat-box">
+            <!-- ההודעות יופיעו כאן -->
+        </div>
+
+        <div class="chat-input">
+            <input type="text" id="message-input" placeholder="הכנס הודעה..." disabled>
+            <button onclick="sendMessage()" disabled>שלח</button>
+        </div>
+    </div>
+
+    <script>
+        // משתנה לשמירת שם המשתמש
+        let currentUser = null;
+
+        // משתנה של הצ'אט
+        let chat = [];
+
+        // פונקציה לשליחת הודעה
+        function sendMessage() {
+            const messageInput = document.getElementById("message-input");
+            const message = messageInput.value;
+            
+            if (message) {
+                // הוספת הודעה לצ'אט
+                chat.push({ sender: currentUser, text: message });
+                updateChat();
+                messageInput.value = ""; // ניקוי שדה ההודעה
+            }
+        }
+
+        // עדכון הצ'אט
+        function updateChat() {
+            const chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML = ""; // ריקון הצ'אט
+
+            chat.forEach(msg => {
+                const messageDiv = document.createElement("div");
+                messageDiv.className = "message " + (msg.sender === currentUser ? "" : "other");
+                messageDiv.innerText = msg.sender + ": " + msg.text;
+                chatBox.appendChild(messageDiv);
+            });
+
+            // גלילה למטה אוטומטית
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // פונקציה להתחברות
+        function login() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            if (username && password) {
+                currentUser = username;
+                alert("התחברת בהצלחה, " + username);
+
+                // מאפשר למשתמש לשלוח הודעות לאחר ההתחברות
+                document.getElementById("message-input").disabled = false;
+                document.querySelector(".chat-input button").disabled = false;
+            } else {
+                alert("אנא הכנס שם משתמש וסיסמה.");
+            }
+        }
+    </script>
+
+</body>
+</html>
